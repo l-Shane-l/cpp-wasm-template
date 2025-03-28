@@ -1,7 +1,7 @@
 { pkgs ? import <nixpkgs> { } }:
 
 pkgs.mkShell {
-  name = "cpp-wasm-env";
+  name = "cpp-wasm-extension-env";
 
   buildInputs = with pkgs; [
     # Basic development tools
@@ -22,37 +22,43 @@ pkgs.mkShell {
 
     # Node.js for testing
     nodejs
+
+    # For generating icons
+    imagemagick
   ];
 
   shellHook = ''
-    echo "C++ WebAssembly Development Environment"
-    echo "----------------------------------------"
+    echo "C++ WebAssembly Chrome Extension Development Environment"
+    echo "-------------------------------------------------------"
     echo "Available commands:"
-    echo "  build-wasm    - Build the WebAssembly project"
-    echo "  serve         - Serve the web directory on localhost:8000"
+    echo "  build-extension  - Build the WebAssembly project for Chrome extension"
+    echo "  generate-icons   - Generate icons for the extension"
     
     # Define helper functions for the environment
-    build-wasm() {
+    build-extension() {
       mkdir -p build
       cd build
       emcmake cmake ..
       make
       make install
-      # Symlink compile_commands.json to project root for IDE integration
       cd ..
-    #      ln -sf build/compile_commands.json .
       # Check if files were correctly installed
-      if [ ! -f "web/hello.js" ] || [ ! -f "web/hello.wasm" ]; then
+      if [ ! -f "extension/hello.js" ] || [ ! -f "extension/hello.wasm" ]; then
         echo "Warning: Files may not have been installed correctly."
-        echo "Manually copying files to web directory..."
-        cp build/hello.js build/hello.wasm web/
+        echo "Manually copying files to extension directory..."
+        mkdir -p extension
+        cp build/hello.js build/hello.wasm extension/
       fi
-      echo "Build complete! Files are in the web/ directory."
+      echo "Build complete! Files are in the extension/ directory."
     }
     
-    serve() {
-      cd web
-      python3 -m http.server 8000
+    generate-icons() {
+      mkdir -p extension/images
+      # Generate a simple green square icon with W letter for WebAssembly
+      convert -size 128x128 xc:green -fill white -gravity center -pointsize 80 -annotate 0 "W" extension/images/icon128.png
+      convert extension/images/icon128.png -resize 48x48 extension/images/icon48.png
+      convert extension/images/icon128.png -resize 16x16 extension/images/icon16.png
+      echo "Icons generated in extension/images directory."
     }
   '';
 }

@@ -1,3 +1,4 @@
+
 cmake_minimum_required(VERSION 3.10)
 project(WasmHelloWorld)
 
@@ -21,9 +22,10 @@ if(EMSCRIPTEN)
         LINK_FLAGS "-s WASM=1 -s EXPORTED_RUNTIME_METHODS=['ccall','cwrap'] -s EXPORTED_FUNCTIONS=['_sayHello','_add','_malloc','_free'] -s ALLOW_MEMORY_GROWTH=1 -s NO_EXIT_RUNTIME=1 --bind -O3"
     )
     
-    # Install the build artifacts to the 'web' directory with absolute path
-    install(TARGETS hello DESTINATION ${CMAKE_SOURCE_DIR}/web)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/hello.wasm DESTINATION ${CMAKE_SOURCE_DIR}/web)
+    # Install the build artifacts to the 'extension' directory with absolute path
+    install(TARGETS hello DESTINATION ${CMAKE_SOURCE_DIR}/extension)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/hello.wasm DESTINATION ${CMAKE_SOURCE_DIR}/extension)
 else()
     message(FATAL_ERROR "This project is designed to be built with Emscripten. Please use emcmake.")
 endif()
+
