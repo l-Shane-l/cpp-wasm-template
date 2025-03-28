@@ -1,0 +1,27 @@
+# Build directory
+/build/
+
+# Emscripten compiled output
+/web/*.js
+/web/*.wasm
+/web/*.wasm.map
+
+# Nix result links
+/result
+/result-*
+
+# IDE files
+.vscode/
+.idea/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Emscripten cache
+.emscripten_cache/
+.emscripten_ports/
+.emscripten_sanity
+
+# Nix files
+.direnv/

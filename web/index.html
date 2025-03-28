@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebAssembly Hello World</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        line-height: 1.6;
+      }
+      .result {
+        background-color: #f0f0f0;
+        padding: 10px;
+        border-radius: 4px;
+        margin: 20px 0;
+      }
+      button {
+        background-color: #4caf50;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+      input {
+        padding: 8px;
+        margin: 4px;
+        width: 60px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>WebAssembly C++ Hello World</h1>
+
+    <div>
+      <button id="hello-btn">Say Hello</button>
+      <div id="hello-result" class="result"></div>
+    </div>
+
+    <div>
+      <h3>Addition Example</h3>
+      <input type="number" id="num1" value="5" />
+      +
+      <input type="number" id="num2" value="3" />
+      <button id="add-btn">Calculate</button>
+      <div id="add-result" class="result"></div>
+    </div>
+
+    <script>
+      // Load the WebAssembly module
+      var Module = {
+        onRuntimeInitialized: function () {
+          console.log("WebAssembly module loaded!");
+
+          // Set up the hello button
+          document
+            .getElementById("hello-btn")
+            .addEventListener("click", function () {
+              const result = Module.ccall("sayHello", "string", [], []);
+              document.getElementById("hello-result").textContent = result;
+            });
+
+          // Set up the add button
+          document
+            .getElementById("add-btn")
+            .addEventListener("click", function () {
+              const num1 = parseInt(document.getElementById("num1").value);
+              const num2 = parseInt(document.getElementById("num2").value);
+              const result = Module.ccall(
+                "add",
+                "number",
+                ["number", "number"],
+                [num1, num2],
+              );
+              document.getElementById("add-result").textContent =
+                `${num1} + ${num2} = ${result}`;
+            });
+        },
+      };
+    </script>
+    <script src="hello.js"></script>
+  </body>
+</html>
