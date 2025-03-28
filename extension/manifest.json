@@ -1,8 +1,13 @@
 {
   "manifest_version": 3,
-  "name": "WebAssembly Hello World",
+  "name": "Irish Translator",
   "version": "1.0",
-  "description": "A simple Chrome extension using WebAssembly",
+  "description": "Get English translations for Irish words",
+  "permissions": ["activeTab", "contextMenus", "storage"],
+  "host_permissions": ["https://www.teanglann.ie/*"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  },
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -11,8 +16,19 @@
       "128": "images/icon128.png"
     }
   },
-  "permissions": [],
-  "content_security_policy": {
-    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["tooltip.css"]
+    }
+  ],
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
   }
 }
